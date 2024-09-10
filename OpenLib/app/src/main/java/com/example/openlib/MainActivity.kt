@@ -11,37 +11,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+
+import com.example.openlib.data.local.test_Room.BookViewModeltest
 import com.example.openlib.ui.theme.OpenLibTheme
+import com.example.openlib.ui.theme.components.BookPage
+import com.example.openlib.viewModel.BookViewModel
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
+       //  val viewModeltestroom = ViewModelProvider(this)[BookViewModeltest::class.java]
+      val viewModel = ViewModelProvider(this)[BookViewModel::class.java]
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
             OpenLibTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                BookPage(viewModel )
+
             }
+
+
+
+
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    OpenLibTheme {
-        Greeting("Android")
-    }
-}

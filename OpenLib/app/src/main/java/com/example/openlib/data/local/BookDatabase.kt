@@ -4,6 +4,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
+/**
+ * Initialize the Database with the dao
+ */
 @Database(entities = [Book::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class BookDatabase :RoomDatabase() {
