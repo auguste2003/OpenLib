@@ -14,36 +14,36 @@ import androidx.room.Update
 @Dao
 interface BookDao {
 
-    @Query("SELECT * FROM Book ")
-    fun getAllBooks():LiveData<List<Book>> // get all books
+    @Query("SELECT * FROM Book")
+    fun getAllBooks(): LiveData<List<Book>> // Récupération des livres locaux en LiveData (asynchrone)
 
-    @Insert
-    fun addBook(book: Book) // add new Book
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+     fun addBook(book: Book)  // Ajout d'un livre (opération suspendue)
 
-    @Query("Delete FROM Book Where id = :id") // delete a book
-    fun deleteBook(id:Int)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addBooks(books: List<Book>)  // Ajout de plusieurs livres (opération suspendue)
 
     @Update
-      fun updateBook(book: Book)
+    fun updateBook(book: Book)  // Mise à jour d'un livre (opération suspendue)
 
-    @Query("SELECT * FROM Book WHERE id = :id") // Get the Book by the id
-     fun getBookById(id: Int):Book
+    @Query("DELETE FROM Book WHERE id = :id")
+     fun deleteBook(id: Int)  // Suppression d'un livre par ID (opération suspendue)
 
-    @Query("SELECT * FROM Book WHERE title LIKE :title") // get the books by
-     fun searchBooksByTitle(title: String):LiveData<List<Book>>
+    @Query("DELETE FROM Book")
+     fun deleteAllBooks()  // Suppression de tous les livres (opération suspendue)
 
-    @Query("SELECT * FROM Book WHERE author LIKE :author ") // get the books by the authors
-     fun searchBooksByAuthor(author:String):LiveData<List<Book>>
+    @Query("SELECT * FROM Book WHERE id = :id")
+     fun getBookById(id: Int): Book  // Récupérer un livre par son ID (opération suspendue)
 
-    @Query("DELETE  FROM Book") // delete all books
-     fun deleteAllBooks()
+    @Query("SELECT * FROM Book WHERE title LIKE :title")
+    fun searchBooksByTitle(title: String): LiveData<List<Book>>  // Recherche de livres par titre (LiveData)
+
+    @Query("SELECT * FROM Book WHERE author LIKE :author")
+    fun searchBooksByAuthor(author: String): LiveData<List<Book>>  // Recherche de livres par auteur (LiveData)
 
     @Query("SELECT EXISTS(SELECT 1 FROM Book WHERE id = :id)")
-     fun isBookExists(id: Int): Boolean
+   fun isBookExists(id: Int): Boolean  // Vérifie si un livre existe (opération suspendue)
 
-
-
-
-
-
+    @Query("SELECT COUNT(*) FROM Book")
+   fun getBooksCount(): Int  // Compte les livres dans la base (opération suspendue)
 }

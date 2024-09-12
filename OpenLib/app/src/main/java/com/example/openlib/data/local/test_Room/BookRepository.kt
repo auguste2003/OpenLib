@@ -1,13 +1,14 @@
 package com.example.openlib.data.local.test_Room
 
+import androidx.lifecycle.LiveData
 import com.example.openlib.MainApplication
 import com.example.openlib.data.local.Book
 
-class BookRepository {
+object BookRepository {
 
     val bookDao = MainApplication.bookDatabase.getBookDao()
     // LiveData pour observer les données en temps réel
-    val allBooks = bookDao.getAllBooks()
+    // val allBooks = bookDao.getAllBooks()
 
     // Fonction pour ajouter un livre
     suspend fun addBook(book: Book) {
@@ -22,5 +23,14 @@ class BookRepository {
     // Fonction pour mettre à jour un livre
     suspend fun updateBook(book: Book) {
         bookDao.updateBook(book)
+    }
+    suspend fun deleteBooks(){
+        bookDao.deleteAllBooks()
+    }
+    suspend fun getCount():Int{
+       return bookDao.getBooksCount()
+    }
+     fun getAllBooks():LiveData<List<Book>>{
+        return bookDao.getAllBooks()
     }
 }

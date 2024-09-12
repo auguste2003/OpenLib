@@ -17,10 +17,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
 import com.example.openlib.data.local.Book
 import com.example.openlib.data.remote.NetworkResponse
 import com.example.openlib.viewModel.BookViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun BookPage(viewModel: BookViewModel) {
@@ -29,6 +31,8 @@ fun BookPage(viewModel: BookViewModel) {
     val bookResult = viewModel.bookResult.observeAsState()
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
+   val allBooks = viewModel.allBooks.observeAsState(initial = emptyList() ) // Observer les livres en local
 
     Column(
         modifier = Modifier
@@ -52,29 +56,42 @@ fun BookPage(viewModel: BookViewModel) {
             )
 
             IconButton(onClick = {
-                viewModel.searchBooks(query) // Lancer la recherche
+
+                    viewModel.searchBooks(query) // Lancer la recherche
+
                 keyboardController?.hide() // Masquer le clavier après la recherche
             }) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = "Rechercher")
             }
         }
+ //    if(allBooks.value.isNullOrEmpty()) {
 
-        // Gestion des états de l'API (à compléter si nécessaire)
-        // Gestion de l'état de la requête API avec NetworkResponse
-        when (val result = bookResult.value) {
-            is NetworkResponse.Loading -> {
-                CircularProgressIndicator() // Affichage de chargement
-            }
-            is NetworkResponse.Success -> {
-                // Affichage des détails des livres
-                BookList(books = result.data)
-            }
-            is NetworkResponse.Error -> {
-                // Affichage du message d'erreur
-                Text(text = result.message, color = Color.Red)
-            }
-            null -> {}
-        }
+
+         // Gestion des états de l'API (à compléter si nécessaire)
+         // Gestion de l'état de la requête API avec NetworkResponse
+         when (val result = bookResult.value) {
+             is NetworkResponse.Loading -> {
+                 CircularProgressIndicator() // Affichage de chargement
+             }
+
+             is NetworkResponse.Success -> {
+                 // Affichage des détails des livres
+                 BookList(books = result.data)
+             }
+
+             is NetworkResponse.Error -> {
+                 // Affichage du message d'erreur
+                 Text(text = result.message, color = Color.Red)
+             }
+
+             null -> {
+                 BookList(books = allBooks.value)
+             }
+         }
+   //  }else{
+         // Afficher les livres qui sont dans le room
+     //    BookList(books = allBooks.value)
+    // }
     }
 }
 
