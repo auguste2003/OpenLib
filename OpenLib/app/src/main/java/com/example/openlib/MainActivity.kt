@@ -12,10 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.compose.rememberNavController
 
 import com.example.openlib.data.local.test_Room.BookViewModeltest
 import com.example.openlib.ui.theme.OpenLibTheme
+import com.example.openlib.ui.theme.components.App
 import com.example.openlib.ui.theme.components.BookPage
+import com.example.openlib.ui.theme.components.HomePage
 import com.example.openlib.viewModel.BookViewModel
 
 class MainActivity : ComponentActivity() {
@@ -28,8 +31,10 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             OpenLibTheme {
-                BookPage(viewModel )
-
+                val navController = rememberNavController()
+            //    BookPage(viewModel )
+             //  HomePage(viewModel,navController)
+                 App()
             }
 
 

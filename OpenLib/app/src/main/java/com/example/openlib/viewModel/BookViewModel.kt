@@ -1,6 +1,10 @@
 package com.example.openlib.viewModel
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,6 +31,9 @@ class BookViewModel :ViewModel(){
     val bookResult:LiveData<NetworkResponse<List<Book>>> = _bookResult
 
      val allBooks :LiveData<List<Book>> = BookRepository.getAllBooks()
+// private var _selectedBook : Book? = null ;
+   // val selectbook : Book? get() = _selectedBook
+    var selectedBook: Book? by mutableStateOf(null)
 
 /*
  init {
@@ -41,6 +48,27 @@ class BookViewModel :ViewModel(){
 
  */
 
+    private val _favoriteBooks = MutableLiveData<List<Book>>(emptyList()) // Initialisation à une liste vide
+    val favoriteBook: LiveData<List<Book>> = _favoriteBooks
+
+fun updateSelectedBook(book: Book){
+    this.selectedBook = book
+}
+    // Add to favorits
+    fun addBookToFavorites(book: Book){
+        val currentFavorites = _favoriteBooks.value?.toMutableList()?: mutableListOf()
+        if(!currentFavorites.contains(book)) {
+            _favoriteBooks.value = currentFavorites + book
+        }
+    }
+
+    // remove from the favorite list
+    fun removeBookFromFavorites(book: Book){
+        val currentFavorites = _favoriteBooks.value?.toMutableList() ?: mutableListOf()
+           if(currentFavorites.contains(book)) {
+               _favoriteBooks.value = currentFavorites.filter { it.id != book.id }
+           }
+    }
 
 
 

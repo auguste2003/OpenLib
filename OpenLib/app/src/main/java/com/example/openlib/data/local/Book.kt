@@ -32,4 +32,6 @@ data class Book(
 
     // Correspond à "description" dans la réponse JSON (pas toujours présent)
     var description: String? = null  // La description du livre, nullable si non présente
-)
+) {
+
+}
